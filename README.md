@@ -1,96 +1,113 @@
 # HERBS
 A Python-based GUI for Histological E-data Registration in Brain Space
 
+HERBS is an open source, extensible, intuitive and interactive software platform for image visualisation and image registration. Image registration is the process of identifying a spatial transformation that maps images to a template such that corresponding anatomical structures are optimally aligned — in other words, a voxel-wise ‘correspondence’ is established between the images and template.
 
-HERBS is an open source, extensible, intuitive and interactive software platform for image visualisation and image registration. Where the image registration is the process of identifying a spatial transformation that maps images to a template such that corresponding anatomical structures are optimally aligned, or in other words, a voxel-wise ‘correspondence’ is established between the images and template.
+HERBS has been tested on Windows 10, macOS (Big Sur – Monterey), and Linux (Kubuntu 18.04, Ubuntu 22.04 LTS). It runs reliably in Python 3.9.0–3.9.2 with PyQt5 ≥ 5.14.2 as a GUI framework.
 
-HERBS has been tested on Windows 10, MacOSx (Big Sur - Monterey), Linux (Kubuntu 18.04, Ubuntu 22.04 LTS), and as a python application, it should run in all environments supporting python 3.8.10-3.9.16 / 3.9.0 with PyQt5 >= 5.14.2 as a GUI framework. For details, please see HERBS CookBook or Tutorials(most recent update).
+---
 
-HERBS provides users:
+## 🔧 TW Recommended Changes
 
-- 2D and 3D visualisation of brain atlas volume data and arbitrary slicing.
-- Image registration with interactive local elastic deformation methods in current version.
-- 2D and 3D visualisation of user defined data.
+<span style="color:darkred; font-weight:bold;">Based on known issues with Python ≥3.10 (see [#71](https://github.com/JingyiGF/HERBS/issues/71), [#68](https://github.com/JingyiGF/HERBS/issues/68), [#39](https://github.com/JingyiGF/HERBS/issues/39), [#25](https://github.com/JingyiGF/HERBS/issues/25)), we recommend using **Python 3.9.2**. This avoids crashes during atlas/mesh download and processing.</span>
 
-## Install
+---
 
-```python
-$ pip install herbs
+## Install (TW Recommended)
+
+We strongly recommend using the provided `environment.yml` file.  
+This pins Python 3.9.2 and dependency versions that are known to work with atlas/mesh downloads.
+
+```bash
+# 1. Clone the TW fork
+git clone https://github.com/twheatcroft07/HERBS.git
+cd HERBS
+
+# 2. Create the environment
+conda env create -f environment.yml
+
+# 3. Activate the environment
+conda activate herbs39
+
+# 4. Install HERBS in editable mode
+pip install -e .
 ```
 
-Please install the newest version of HERBS.
+That’s it — you now have HERBS installed in a reproducible, working environment.
+
+---
 
 ## Usage
 
+Activate your environment first:
+```bash
+conda activate herbs39
+```
+
+Then run HERBS:
 ```python
 import herbs
 herbs.run_herbs()
 ```
 
-After running the above scripts, a GUI window will pop up. Users can download atlas and upload images for further process,
+A GUI window will open. Users can download or manually load atlases, then upload images for further processing.
 
 <img src="./herbs/herbs.png" width="800px"></img>
 
-For more information, please read HERBS CookBook (on going) or check the Tutorial folder for corresponding functionalities.
+For more information, please read the HERBS CookBook (ongoing) or check the Tutorial folder.
 
-## Atlas Storage
+---
 
-- <span style="font-weight:700;font-size:18px">
-    Do not store Atlases inside HERBS folder. 
-</span>
-When downloading Atlases, HERBS asks users to select the folder to store the atlas. Please choose a folder other than HERBS folder.
+## Atlas Storage and Download
 
-- <span style="font-weight:700;font-size:18px">
-    Save different Atlas in different folders. 
-</span>
-When downloading an atlas other than the one you already have, please store it in another folder.
+- **Do not** store atlases inside the HERBS folder itself.
+- Store each atlas version in its own separate folder.
 
+⚠️ Known issue: the built-in atlas downloader may hang or fail on Python ≥3.10 (see also [#71](https://github.com/JingyiGF/HERBS/issues/71), [#68](https://github.com/JingyiGF/HERBS/issues/68)).
 
-## Some Pre-Requirement Issues
+✅ With **Python 3.9.2**, we do *not* expect this issue — atlas downloads and processing work reliably in our testing.
 
-- In order to run HERBS properly, 64 bit operating systems and 64 bit Python are required.
+- **Manual atlas setup (alternative or backup method):**
+  1. Create a folder outside the HERBS repo (e.g. `~/HERBS_ATLASES/allen_ccf_10um`).
+  2. Place the Allen atlas files there:
+     - `annotation_10.nrrd`
+     - `average_template_10.nrrd`
+     - (plus optional but recommended: `atlas_labels.pkl`, `atlas_axis_info.pkl`, `atlas_meshdata.pkl`, etc.)
+  3. In HERBS, select this folder when prompted, then click *Process*.
 
-- 3D visualisation in HERBS depends on OpenGL, if you face to the problem that no OpenGL is installed on your machine, please see (https://www.opengl.org) to download and install accordingly. 
+---
 
-- If you use MacOS and face to the problem of ImportError states that "Unable to load OpenGL package". Please try to find the OpenGL package folder from where you install all python packages in your enviroment, and go to OpenGL's child-folder "platform", open "ctypesloader.py", and change line 
+## Requirements & Dependencies
 
-```python
-fullName = util.find_library( name )
-```
+- HERBS requires a 64-bit operating system and 64-bit Python.
+- 3D visualisation in HERBS depends on OpenGL. If you encounter OpenGL errors:
+  - macOS: edit `OpenGL/platform/ctypesloader.py` to set the path to `/System/Library/Frameworks/OpenGL.framework/OpenGL`.
+  - Linux/Windows: install OpenGL from [https://www.opengl.org](https://www.opengl.org).
 
-to
+- **Dependencies:**
+  - PyQt5 (≥5.14.2)
+  - NumPy (≤1.21)
+  - Numba (0.55, compatible with NumPy ≤1.21)
+  - matplotlib, scikit-image, scipy, plotly, dash
 
-```python
-fullName = '/System/Library/Frameworks/OpenGL.framework/OpenGL'
-```
+If dependency conflicts arise, the easiest fix is to create a fresh environment and reinstall HERBS.
 
+---
 
-- For the current version of HERBS, Python is required to be installed. Please see (https://www.python.org) for downloading.
+## Issues & Discussions
 
-- If you would like to install HERBS through terminal, **pip** is required. 
-	- Check if pip is installed, `pip --version` or `pip help`.
-	- Use `python3 -m ensurepip` for MacOS to install pip.
-	- Use `curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py` to download requiring file for installing pip on Windows and `python get-pip.py` to install pip.
-	- Please update pip to the newest version before installing HERBS.
+- Report issues: [https://github.com/JingyiGF/HERBS/issues](https://github.com/JingyiGF/HERBS/issues)  
+- Start discussions: [https://github.com/JingyiGF/HERBS/discussions](https://github.com/JingyiGF/HERBS/discussions)
 
-- We strongly recommend users to use Python and install packages with virtual environment. For no-coders, we strongly recommend to use IDE to create environment at the moment. A desktop app of HERBS is on its way.   
+When reporting, please include a clear description, error messages, or screenshots.
 
-## Some Dependencies Conflict Issues
-- The initial of test of HERBS was carried on Windows 10 (one user claimed he had a Windows 11 before, but it turned out to be a Windows 10 at the end), MacOSx (Big Sur - Monterey) and Linux (Kubuntu 18.04, Ubuntu 22.04 LTS) with Python==3.8.10 and the corresponding dependencies listed in CookBook. 
+---
 
-- The current tests showed that different version of Python accepts different versions of dependencies. For example, PyQt5 == 5.14.2 works when Python>=3.8.10 and PyQt5 >= 5.15.0 works when Python==3.9. 
+## Development Notes
 
-- HERBS depends on Numba and the valid version for Numba is highly depends on the version of Numpy. For example, Numba == 0.54 only works when Numpy <= 1.20 and Numba == 0.55 only works when Numpy <= 1.21 and so on.
+HERBS is under active development. Check for updates frequently, especially before starting a new project. Fork users can push changes to their repo while still being able to pull upstream updates if needed.
 
-- If you face to these kinds of problems, the easiest way to install HERBS is to create a new environment and install HERBS without previous installation of any dependencies.
+---
 
-### 
-Please report your issues: https://github.com/JingyiGF/HERBS/issues. Please have a good description (maybe a screenshot or an error message). Any feedback welcome!
+Hope this tool makes your research life more tasty :-)
 
-Please feel free to start any discussion: https://github.com/JingyiGF/HERBS/discussions.
-
-## Finally
-HERBS is 'always' in development, please check updates every time before you use it.
-
-
-Hope this tool makes your amazing research life more tasty :-)
