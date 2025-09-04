@@ -8,3 +8,8 @@ dependencies:
   - numba=0.56.4
   - pandas=1.5.3
   - pyqtgraph=0.12.3
+  - matplotlib
+  - scikit-image
+  - scipy
+  - plotly
+  - dash
