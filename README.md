@@ -84,11 +84,30 @@ For more information, please read the HERBS CookBook (ongoing) or check the Tuto
   - macOS: edit `OpenGL/platform/ctypesloader.py` to set the path to `/System/Library/Frameworks/OpenGL.framework/OpenGL`.
   - Linux/Windows: install OpenGL from [https://www.opengl.org](https://www.opengl.org).
 
-- **Dependencies:**
-  - PyQt5 (≥5.14.2)
-  - NumPy (≤1.21)
-  - Numba (0.55, compatible with NumPy ≤1.21)
-  - matplotlib, scikit-image, scipy, plotly, dash
+## Dependencies (TW Recommended / Tested)
+
+HERBS runs best in a conda environment built from the provided [`environment.yml`](./environment.yml).  
+This YAML pins the tricky packages (NumPy, pandas, Numba, PyQt) to compatible versions and ensures all required plotting/GUI libraries are included.
+
+- **Python**: 3.9.2  
+- **NumPy**: 1.23.5  _(avoid 2.x; pyqtgraph paths use `np.product`)_  
+- **pandas**: 1.5.3  _(built against NumPy 1.23 ABI)_  
+- **Numba**: 0.56.4  _(compatible with NumPy 1.23)_  
+- **PyQt / PyQt5**: Qt 5.x / PyQt5 ≥ 5.14.2  
+- **pyqtgraph**: 0.12.3  
+- **matplotlib**  
+- **scikit-image**  
+- **scipy**  
+- **plotly**  
+- **dash**
+
+---
+
+**Notes**  
+- **NumPy 2.x** is not supported (removes `np.product`, breaks rotated slice views).  
+- If you generated atlas pickle files under a different NumPy major version, re-run **Process** in HERBS to rebuild them.  
+- Installing via the `environment.yml` is strongly recommended to ensure consistent versions across machines.
+
 
 If dependency conflicts arise, the easiest fix is to create a fresh environment and reinstall HERBS.
 
