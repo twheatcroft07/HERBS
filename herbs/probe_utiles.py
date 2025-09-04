@@ -812,6 +812,9 @@ def calculate_probe_info(
         "terminus_vox": pv_ep,
         "sites_label": sites_label,
         "sites_loc_b": sites_pnt,
+        #LC addition
+        "sites_loc_relative": sites_loc,
+        #
         "sites_vox": sites_vox,
         "region_label": group_id_label,
         "region_length": region_length,
