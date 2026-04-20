@@ -1,0 +1,13 @@
+name: herbs-map
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - numpy
+  - scipy
+  - matplotlib
+  - plotly
+  - pandas
+  - scikit-image
+  - jupyter
+  - ipykernel
